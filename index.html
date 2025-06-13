@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MegaText - Shareable Display</title>
+  <title>Eren Xiters - Daily User/Pass</title>
   <style>
     * {
       box-sizing: border-box;
@@ -104,12 +104,14 @@
   <div class="text-display" id="textDisplay"></div>
 
   <div class="input-area">
-    <textarea id="textInput" placeholder="Type here...">User : eren\nPass : erenfree</textarea>
+    <textarea id="textInput" placeholder="Type here..."></textarea>
+
     <button onclick="generateLink()">Generate Shareable Link</button>
     <div class="share-link" id="shareLink"></div>
   </div>
 
   <script>
+
     const textInput = document.getElementById("textInput");
     const textDisplay = document.getElementById("textDisplay");
     const shareLink = document.getElementById("shareLink");
@@ -134,8 +136,8 @@
 
     function generateLink() {
       const encoded = encodeURIComponent(textInput.value);
-      const filePath = window.location.href.split('#')[0];
-      const link = `${filePath}#${encoded}`;
+      const filePath = window.location.href.split('?')[0];
+      const link = `${filePath}?text=${encoded}`;
       shareLink.innerHTML = `<strong>Link:</strong> <br>${link}`;
       navigator.clipboard.writeText(link).then(() => {
         shareLink.innerHTML += `<br><em>(Copied to clipboard)</em>`;
@@ -143,9 +145,11 @@
     }
 
     window.addEventListener("load", () => {
-      const hash = decodeURIComponent(window.location.hash.slice(1));
-      if (hash) {
-        textInput.value = hash.replace(/\\n/g, "\n");
+      const params = new URLSearchParams(window.location.search);
+      const text = params.get("text");
+      if (text) {
+        const decoded = decodeURIComponent(text).replace(/\\n/g, "\n");
+        textInput.value = decoded;
       }
       updateDisplay();
     });
